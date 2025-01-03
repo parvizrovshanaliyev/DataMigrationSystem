@@ -1,0 +1,6 @@
+@DataMigrationSystem.Api_HostAddress = http://localhost:5086
+
+GET {{DataMigrationSystem.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

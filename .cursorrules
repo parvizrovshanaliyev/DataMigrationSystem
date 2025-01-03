@@ -1,0 +1,158 @@
+{
+    "formatOnSave": true,
+    "defaultFormatter": "csharp",
+    "rulers": [100],
+    "tabSize": 4,
+    "insertSpaces": true,
+    "trimTrailingWhitespace": true,
+    "insertFinalNewline": true,
+    "bracketSpacing": true,
+    "maxLineLength": 100,
+    "organizeImports": true,
+    
+    "csharp": {
+        "style": {
+            "indentationSize": 4,
+            "bracesOnNewLine": true,
+            "newLinesForBracesInMethods": true,
+            "newLinesForBracesInProperties": true,
+            "newLinesForBracesInAccessors": true,
+            "newLinesForBracesInAnonymousMethods": true,
+            "newLinesForBracesInControlBlocks": true,
+            "newLinesForBracesInAnonymousTypes": true,
+            "newLinesForBracesInObjectCollectionArrayInitializers": true,
+            "newLinesForBracesInLambdaExpressionBody": true,
+            "preferExpressionBodiedMembers": true,
+            "orderingRules": {
+                "systemUsingDirectivesFirst": true,
+                "usingDirectivesPlacement": "outsideNamespace",
+                "blankLinesBetweenUsingGroups": 1
+            },
+            "namingRules": {
+                "allowedHungarianPrefixes": [],
+                "includeInferredTupleElementNames": true,
+                "tupleElementNameCasing": "PascalCase"
+            }
+        },
+        "diagnostics": {
+            "suppressWarnings": [],
+            "treatWarningsAsErrors": true,
+            "enableAnalyzers": true,
+            "analyzers": {
+                "enableAll": true,
+                "exclude": []
+            }
+        },
+        "codeGeneration": {
+            "generateXmlDocumentation": true,
+            "preferThrowExpression": true,
+            "preferConditionalDelegateCall": true,
+            "preferPatternMatching": true,
+            "preferNullPropagation": true
+        }
+    },
+
+    "folders": {
+        "exclude": [
+            "**/bin",
+            "**/obj",
+            "**/node_modules",
+            "**/.git",
+            "**/dist",
+            "**/coverage",
+            "**/logs",
+            "**/.vs",
+            "**/.idea"
+        ]
+    },
+
+    "search": {
+        "exclude": [
+            "**/bin",
+            "**/obj",
+            "**/node_modules",
+            "**/.git",
+            "**/dist",
+            "**/coverage",
+            "**/*.min.js",
+            "**/*.min.css",
+            "**/generated",
+            "**/migrations"
+        ],
+        "useGitIgnore": true,
+        "followSymlinks": false
+    },
+
+    "editor": {
+        "wordWrap": "off",
+        "rulers": [100],
+        "guides": {
+            "indentation": true,
+            "brackets": true,
+            "highlightActiveIndentation": true,
+            "highlightActiveBracket": true
+        },
+        "suggestSelection": "first",
+        "formatOnPaste": true,
+        "formatOnType": true,
+        "autoClosingBrackets": "always",
+        "autoClosingQuotes": "always",
+        "autoSurround": "quotes",
+        "trimAutoWhitespace": true,
+        "autoIndent": true,
+        "renderWhitespace": "boundary",
+        "renderControlCharacters": true,
+        "detectIndentation": false
+    },
+
+    "files": {
+        "associations": {
+            "*.csproj": "xml",
+            "*.props": "xml",
+            "*.targets": "xml",
+            "*.xaml": "xml",
+            "*.cshtml": "html",
+            "*.razor": "razor",
+            "*.json": "jsonc",
+            "*.md": "markdown",
+            "*.yml": "yaml",
+            "*.yaml": "yaml",
+            "Dockerfile*": "dockerfile"
+        },
+        "exclude": {
+            "**/bin": true,
+            "**/obj": true,
+            "**/.git": true,
+            "**/node_modules": true,
+            "**/logs": true,
+            "**/.vs": true,
+            "**/.idea": true
+        },
+        "watcherExclude": {
+            "**/node_modules/**": true,
+            "**/dist/**": true,
+            "**/coverage/**": true
+        },
+        "trimTrailingWhitespace": true,
+        "insertFinalNewline": true,
+        "trimFinalNewlines": true
+    },
+
+    "git": {
+        "enableSmartCommit": true,
+        "confirmSync": true,
+        "autofetch": true,
+        "enableStatusBarSync": true
+    },
+
+    "terminal": {
+        "integrated": {
+            "shell": {
+                "windows": "powershell.exe"
+            },
+            "scrollback": 5000,
+            "confirmOnExit": true,
+            "copyOnSelection": true
+        }
+    }
+} 
