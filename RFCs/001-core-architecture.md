@@ -24,6 +24,194 @@ This RFC defines the solution structure, core components, and architectural patt
 
 ## 2. Solution Structure
 
+System Overview
+
+The system focuses on transferring data between various databases, including PostgreSQL, with advanced features for schema mapping, data transformation, and real-time monitoring.
+
+### Logical Architecture
+```mermaid
+graph TB
+    subgraph "Presentation Layer"
+        UI[User Interface]
+        API[API Gateway]
+    end
+
+    subgraph "Business Layer"
+        Auth[Authentication]
+        Projects[Project Management]
+        Connections[Connection Management]
+        Schemas[Schema Management]
+        Migration[Migration Engine]
+        Monitor[Monitoring]
+    end
+
+    subgraph "Data Layer"
+        Cache[Distributed Cache]
+        DB[Database]
+        Queue[Message Queue]
+    end
+
+    UI --> API
+    API --> Auth
+    API --> Projects
+    API --> Connections
+    API --> Schemas
+    API --> Migration
+    API --> Monitor
+
+    Auth --> Cache
+    Auth --> DB
+    Projects --> DB
+    Connections --> DB
+    Schemas --> DB
+    Migration --> DB
+    Migration --> Queue
+    Monitor --> Cache
+    Monitor --> DB
+```
+
+### Physical Architecture
+```mermaid
+graph TB
+    subgraph "Frontend Tier"
+        LB[Load Balancer]
+        Web1[Web Server 1]
+        Web2[Web Server 2]
+    end
+
+    subgraph "Application Tier"
+        API1[API Server 1]
+        API2[API Server 2]
+        Worker1[Worker 1]
+        Worker2[Worker 2]
+    end
+
+    subgraph "Cache Tier"
+        Redis1[Redis Primary]
+        Redis2[Redis Replica]
+    end
+
+    subgraph "Database Tier"
+        PG1[PostgreSQL Primary]
+        PG2[PostgreSQL Standby]
+    end
+
+    subgraph "Message Queue"
+        RMQ1[RabbitMQ Node 1]
+        RMQ2[RabbitMQ Node 2]
+    end
+
+    LB --> Web1
+    LB --> Web2
+    Web1 --> API1
+    Web2 --> API2
+    API1 --> Worker1
+    API2 --> Worker2
+
+    API1 --> Redis1
+    API2 --> Redis1
+    Redis1 --> Redis2
+
+    Worker1 --> PG1
+    Worker2 --> PG1
+    PG1 --> PG2
+
+    Worker1 --> RMQ1
+    Worker2 --> RMQ1
+    RMQ1 --> RMQ2
+```
+
+### Database Architecture
+```mermaid
+erDiagram
+    Project ||--o{ Connection : has
+    Project ||--o{ MigrationJob : contains
+    Connection ||--o{ SchemaMapping : uses
+    SchemaMapping ||--o{ ColumnMapping : contains
+    MigrationJob ||--o{ MigrationLog : generates
+
+    Project {
+        uuid id PK
+        string name UK
+        string description
+        enum status
+        timestamp created_at
+        uuid organization_id FK
+    }
+
+    Connection {
+        uuid id PK
+        string name UK
+        json credentials
+        enum type
+        boolean is_source
+        uuid project_id FK
+    }
+
+    SchemaMapping {
+        uuid id PK
+        string source_schema
+        string target_schema
+        json mapping_rules
+        uuid connection_id FK
+    }
+
+    ColumnMapping {
+        uuid id PK
+        string source_column
+        string target_column
+        string transform_rule
+        uuid schema_mapping_id FK
+    }
+
+    MigrationJob {
+        uuid id PK
+        timestamp start_time
+        timestamp end_time
+        enum status
+        json statistics
+        uuid project_id FK
+    }
+
+    MigrationLog {
+        uuid id PK
+        enum level
+        string message
+        json context
+        timestamp created_at
+        uuid migration_job_id FK
+    }
+```
+
+### Feature Slice Architecture
+```mermaid
+graph TB
+    subgraph "Feature Slice"
+        EP[Endpoint] --> Command
+        EP --> Query
+
+        Command --> Handler[Command Handler]
+        Query --> QueryHandler[Query Handler]
+
+        Handler --> Domain[Domain Logic]
+        QueryHandler --> Domain
+
+        Domain --> Data[Data Access]
+
+        subgraph "Cross-Cutting"
+            Validation
+            Logging
+            Caching
+            Security
+        end
+
+        Handler --> Validation
+        Handler --> Logging
+        QueryHandler --> Caching
+        Handler --> Security
+    end
+```
+
 ### 2.1 Projects Organization
 ```
 src/
