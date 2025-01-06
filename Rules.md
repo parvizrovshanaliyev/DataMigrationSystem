@@ -920,3 +920,106 @@ public class TracingMiddleware
     }
 }
 ``` 
+
+# Architecture Rules
+
+## Application Layer Architecture
+
+### Core Application Layer (`src/Core/DataMigration.Application`)
+
+The Core Application layer contains shared components and infrastructure used across all features:
+
+1. **Common Behaviors**
+   - Logging behaviors
+   - Validation behaviors
+   - Caching behaviors
+   - Authorization behaviors
+
+2. **Base Infrastructure**
+   - Base interfaces and abstractions
+   - Common CQRS infrastructure
+   - Shared pipeline behaviors
+   - Global error handling
+
+3. **Common Components**
+   - Base command/query handlers
+   - Common validation rules
+   - Shared DTOs and models
+   - Application-wide services
+
+### Feature-Specific Implementation (`src/Features/{FeatureName}`)
+
+Feature modules contain specific business logic and implementations:
+
+1. **Business Logic**
+   - Feature-specific commands/queries
+   - Feature-specific DTOs
+   - Feature-specific validation rules
+   - Feature-specific services
+
+2. **Rules**
+   - Must inherit from core components where applicable
+   - Must not duplicate functionality available in core
+   - Must maintain feature isolation
+   - Must follow CQRS pattern defined in core
+
+3. **Organization**
+   ```
+   src/Features/{FeatureName}/
+   ├── Commands/
+   │   ├── {Command}/
+   │   │   ├── {Command}Command.cs
+   │   │   └── {Command}CommandHandler.cs
+   ├── Queries/
+   │   └── {Query}/
+   ├── DTOs/
+   └── Services/
+   ```
+
+## Implementation Guidelines
+
+1. **Core vs Feature Decision Making**
+   - If the functionality is used by multiple features → Core
+   - If the functionality is specific to one feature → Feature
+   - If the behavior is cross-cutting → Core
+   - If the logic is business-specific → Feature
+
+2. **Dependency Rules**
+   - Features can depend on Core
+   - Core cannot depend on Features
+   - Features cannot depend on other Features
+   - Maximum dependency depth is 1
+
+3. **Code Organization**
+   - Keep feature-specific code within its feature boundary
+   - Use core components for cross-cutting concerns
+   - Follow consistent naming conventions
+   - Maintain clear separation of concerns
+
+4. **Best Practices**
+   - Use inheritance from core base classes
+   - Implement feature-specific interfaces
+   - Follow CQRS pattern consistently
+   - Maintain proper encapsulation
+   - Document public APIs
+   - Write unit tests for both core and feature code
+
+## Validation and Enforcement
+
+1. **Code Reviews**
+   - Verify proper layer separation
+   - Check for unauthorized dependencies
+   - Ensure core components are properly utilized
+   - Validate feature isolation
+
+2. **Static Analysis**
+   - Use architecture tests to verify rules
+   - Enforce dependency constraints
+   - Check naming conventions
+   - Validate project structure
+
+3. **Documentation**
+   - Document architectural decisions
+   - Maintain clear boundaries
+   - Update documentation when patterns change
+   - Include examples of proper usage 

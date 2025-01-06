@@ -264,7 +264,40 @@
                 "allowed": ["domain"],
                 "pattern": "**/Application/**",
                 "enforceCQRSPattern": true,
-                "enforceValidation": true
+                "enforceValidation": true,
+                "coreVsFeature": {
+                    "coreApplicationRules": {
+                        "allowedContent": [
+                            "Common behaviors (logging, validation, caching)",
+                            "Base interfaces and abstractions",
+                            "Common CQRS infrastructure",
+                            "Shared pipeline behaviors",
+                            "Global error handling",
+                            "Common validation rules",
+                            "Base command/query handlers",
+                            "Application-wide services",
+                            "Shared DTOs and models",
+                            "Common authentication/authorization behaviors"
+                        ],
+                        "pattern": "**/Core/DataMigration.Application/**",
+                        "enforceSharedConcerns": true
+                    },
+                    "featureApplicationRules": {
+                        "allowedContent": [
+                            "Feature-specific business logic",
+                            "Feature-specific commands/queries",
+                            "Feature-specific DTOs",
+                            "Feature-specific validation rules",
+                            "Feature-specific services",
+                            "Feature domain logic"
+                        ],
+                        "pattern": "**/Features/**/Application/**",
+                        "enforceFeatureIsolation": true,
+                        "mustInheritFromCore": true
+                    },
+                    "enforceLayerSeparation": true,
+                    "preventDuplication": true
+                }
             },
             "infrastructure": {
                 "allowed": ["domain", "application"],
