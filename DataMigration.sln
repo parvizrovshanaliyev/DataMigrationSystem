@@ -7,45 +7,47 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B51D5204-2E4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{EDBED9D4-AA3F-4ABD-8182-A432E436F84D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Domain", "src\Core\DataMigration.Domain\DataMigration.Domain.csproj", "{0864730F-7918-44D3-B26B-F0A7CCBDE033}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Domain", "src\Core\DataMigration.Domain\DataMigration.Domain.csproj", "{0864730F-7918-44D3-B26B-F0A7CCBDE033}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Application", "src\Core\DataMigration.Application\DataMigration.Application.csproj", "{5C9CEE18-291C-4FD2-A8AE-447FAD79739E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Application", "src\Core\DataMigration.Application\DataMigration.Application.csproj", "{5C9CEE18-291C-4FD2-A8AE-447FAD79739E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Infrastructure", "src\Core\DataMigration.Infrastructure\DataMigration.Infrastructure.csproj", "{20251F3D-C4CD-4B4C-8AB4-A875BD36D484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Infrastructure", "src\Core\DataMigration.Infrastructure\DataMigration.Infrastructure.csproj", "{20251F3D-C4CD-4B4C-8AB4-A875BD36D484}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "Features", "{68CBFDCB-CED6-455D-8A9C-1A46B6C09C37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Auth", "src\Features\DataMigration.Auth\DataMigration.Auth.csproj", "{75E07B1E-1816-4212-A869-E7AE4D9F418E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Auth", "src\Features\DataMigration.Auth\DataMigration.Auth.csproj", "{75E07B1E-1816-4212-A869-E7AE4D9F418E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.UserManagement", "src\Features\DataMigration.UserManagement\DataMigration.UserManagement.csproj", "{4152BD04-F816-494E-93B0-80CE43DAC273}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.UserManagement", "src\Features\DataMigration.UserManagement\DataMigration.UserManagement.csproj", "{4152BD04-F816-494E-93B0-80CE43DAC273}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{57E017BF-576E-49B1-B35F-0D941E77FEC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.E2ETests", "tests\DataMigration.E2ETests\DataMigration.E2ETests.csproj", "{B2189F24-C1CC-4025-A8EB-2DBDB4EE590D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.E2ETests", "tests\DataMigration.E2ETests\DataMigration.E2ETests.csproj", "{B2189F24-C1CC-4025-A8EB-2DBDB4EE590D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.IntegrationTests", "tests\DataMigration.IntegrationTests\DataMigration.IntegrationTests.csproj", "{59A7B84E-DD61-4E7F-9DE0-A26E7102CBC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.IntegrationTests", "tests\DataMigration.IntegrationTests\DataMigration.IntegrationTests.csproj", "{59A7B84E-DD61-4E7F-9DE0-A26E7102CBC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.UnitTests", "tests\DataMigration.UnitTests\DataMigration.UnitTests.csproj", "{F2232D96-76D8-4B30-8077-D6492DCAAAD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.UnitTests", "tests\DataMigration.UnitTests\DataMigration.UnitTests.csproj", "{F2232D96-76D8-4B30-8077-D6492DCAAAD4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{46B8B1F0-5CDF-47E1-8803-8AE3E368480C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Admin", "src\Presentation\DataMigration.Admin\DataMigration.Admin.csproj", "{549B0C37-79AE-4F99-A0F4-484FC612043E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Admin", "src\Presentation\DataMigration.Admin\DataMigration.Admin.csproj", "{549B0C37-79AE-4F99-A0F4-484FC612043E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Api", "src\Presentation\DataMigration.Api\DataMigration.Api.csproj", "{2CE90838-6016-4E28-8802-7E61650836F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Api", "src\Presentation\DataMigration.Api\DataMigration.Api.csproj", "{2CE90838-6016-4E28-8802-7E61650836F8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{440A4902-E9A6-4958-AF9B-B4AF4D2F5C81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Common", "src\Shared\DataMigration.Common\DataMigration.Common.csproj", "{5D6A1564-C8AE-46B5-B203-27DCCA58AA52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Common", "src\Shared\DataMigration.Common\DataMigration.Common.csproj", "{5D6A1564-C8AE-46B5-B203-27DCCA58AA52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataMigration.Contracts", "src\Shared\DataMigration.Contracts\DataMigration.Contracts.csproj", "{D2B69573-9E0C-40D5-A4ED-2E8119E6554D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataMigration.Contracts", "src\Shared\DataMigration.Contracts\DataMigration.Contracts.csproj", "{D2B69573-9E0C-40D5-A4ED-2E8119E6554D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0826139C-A851-463D-8172-9FC60CDDA7E7}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0864730F-7918-44D3-B26B-F0A7CCBDE033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -97,6 +99,9 @@ Global
 		{D2B69573-9E0C-40D5-A4ED-2E8119E6554D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2B69573-9E0C-40D5-A4ED-2E8119E6554D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EDBED9D4-AA3F-4ABD-8182-A432E436F84D} = {B51D5204-2E4C-475E-9C2C-4B0DB7F5715A}
 		{0864730F-7918-44D3-B26B-F0A7CCBDE033} = {EDBED9D4-AA3F-4ABD-8182-A432E436F84D}
@@ -114,5 +119,8 @@ Global
 		{440A4902-E9A6-4958-AF9B-B4AF4D2F5C81} = {B51D5204-2E4C-475E-9C2C-4B0DB7F5715A}
 		{5D6A1564-C8AE-46B5-B203-27DCCA58AA52} = {440A4902-E9A6-4958-AF9B-B4AF4D2F5C81}
 		{D2B69573-9E0C-40D5-A4ED-2E8119E6554D} = {440A4902-E9A6-4958-AF9B-B4AF4D2F5C81}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4EE0B94-4B74-4993-B191-FCEF075C7937}
 	EndGlobalSection
 EndGlobal
