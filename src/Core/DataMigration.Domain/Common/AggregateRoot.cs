@@ -2,14 +2,11 @@ namespace DataMigration.Domain.Common;
 
 public abstract class AggregateRoot : Entity
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
-    
-    protected void AddDomainEvent(IDomainEvent domainEvent)
+    protected void Apply(IDomainEvent @event)
     {
-        _domainEvents.Add(domainEvent);
+        When(@event);
+        AddDomainEvent(@event);
     }
-    
-    public IReadOnlyList<IDomainEvent> GetDomainEvents() => _domainEvents.AsReadOnly();
-    
-    public void ClearDomainEvents() => _domainEvents.Clear();
+
+    protected abstract void When(IDomainEvent @event);
 } 

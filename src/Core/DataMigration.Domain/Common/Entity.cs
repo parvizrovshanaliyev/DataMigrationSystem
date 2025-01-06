@@ -2,15 +2,17 @@ namespace DataMigration.Domain.Common;
 
 public abstract class Entity
 {
-    public Guid Id { get; protected set; }
-    public DateTime CreatedAt { get; protected set; }
-    public DateTime? UpdatedAt { get; protected set; }
-    public string? CreatedBy { get; protected set; }
-    public string? UpdatedBy { get; protected set; }
+    private readonly List<IDomainEvent> _domainEvents = new();
+    
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected Entity()
+    protected void AddDomainEvent(IDomainEvent domainEvent)
     {
-        Id = Guid.NewGuid();
-        CreatedAt = DateTime.UtcNow;
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
     }
 } 

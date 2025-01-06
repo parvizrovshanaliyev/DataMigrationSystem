@@ -31,7 +31,22 @@
             "namingRules": {
                 "allowedHungarianPrefixes": [],
                 "includeInferredTupleElementNames": true,
-                "tupleElementNameCasing": "PascalCase"
+                "tupleElementNameCasing": "PascalCase",
+                "interfacePrefix": "I",
+                "asyncSuffix": "Async",
+                "testMethodNaming": "{Feature}_{Scenario}_{ExpectedResult}"
+            },
+            "cleanCode": {
+                "maxMethodLength": 20,
+                "maxClassLength": 200,
+                "maxParameterCount": 3,
+                "maxCyclomaticComplexity": 10,
+                "enforceNullableAnnotations": true,
+                "enforceAsyncSuffix": true,
+                "enforceExceptionSuffix": true,
+                "maxInheritanceDepth": 3,
+                "maxNestedBlocks": 3,
+                "enforceImmutability": true
             }
         },
         "diagnostics": {
@@ -48,7 +63,26 @@
             "preferThrowExpression": true,
             "preferConditionalDelegateCall": true,
             "preferPatternMatching": true,
-            "preferNullPropagation": true
+            "preferNullPropagation": true,
+            "domainDrivenDesign": {
+                "enforceValueObjects": true,
+                "enforceAggregateRoots": true,
+                "enforceDomainEvents": true,
+                "enforceEntityBehavior": true,
+                "enforceInvariants": true,
+                "enforceEncapsulation": true
+            }
+        },
+        "testing": {
+            "namingConvention": "MethodName_Scenario_ExpectedResult",
+            "requiredCoverage": 80,
+            "enforceTestCategories": true,
+            "categories": [
+                "Unit",
+                "Integration",
+                "Performance",
+                "Security"
+            ]
         }
     },
 
@@ -62,7 +96,11 @@
             "**/coverage",
             "**/logs",
             "**/.vs",
-            "**/.idea"
+            "**/.idea",
+            "**/TestResults",
+            "**/packages",
+            "**/artifacts",
+            "**/.docker"
         ]
     },
 
@@ -77,7 +115,11 @@
             "**/*.min.js",
             "**/*.min.css",
             "**/generated",
-            "**/migrations"
+            "**/migrations",
+            "**/TestResults",
+            "**/packages",
+            "**/artifacts",
+            "**/.docker"
         ],
         "useGitIgnore": true,
         "followSymlinks": false
@@ -102,7 +144,17 @@
         "autoIndent": true,
         "renderWhitespace": "boundary",
         "renderControlCharacters": true,
-        "detectIndentation": false
+        "detectIndentation": false,
+        "cleanArchitecture": {
+            "enforceLayerDependencies": true,
+            "domainLayerPattern": "**/Domain/**",
+            "applicationLayerPattern": "**/Application/**",
+            "infrastructureLayerPattern": "**/Infrastructure/**",
+            "presentationLayerPattern": "**/Presentation/**",
+            "enforceFeatureModules": true,
+            "enforceLayerIsolation": true,
+            "maxDependencyDepth": 1
+        }
     },
 
     "files": {
@@ -117,7 +169,12 @@
             "*.md": "markdown",
             "*.yml": "yaml",
             "*.yaml": "yaml",
-            "Dockerfile*": "dockerfile"
+            "Dockerfile*": "dockerfile",
+            "*.feature": "gherkin",
+            "*.proto": "protobuf",
+            "*.graphql": "graphql",
+            "*.bicep": "bicep",
+            "*.tf": "terraform"
         },
         "exclude": {
             "**/bin": true,
@@ -126,12 +183,19 @@
             "**/node_modules": true,
             "**/logs": true,
             "**/.vs": true,
-            "**/.idea": true
+            "**/.idea": true,
+            "**/TestResults": true,
+            "**/packages": true,
+            "**/artifacts": true,
+            "**/.docker": true
         },
         "watcherExclude": {
             "**/node_modules/**": true,
             "**/dist/**": true,
-            "**/coverage/**": true
+            "**/coverage/**": true,
+            "**/TestResults/**": true,
+            "**/artifacts/**": true,
+            "**/.docker/**": true
         },
         "trimTrailingWhitespace": true,
         "insertFinalNewline": true,
@@ -142,7 +206,35 @@
         "enableSmartCommit": true,
         "confirmSync": true,
         "autofetch": true,
-        "enableStatusBarSync": true
+        "enableStatusBarSync": true,
+        "branchNaming": {
+            "mainBranch": "main",
+            "developBranch": "develop",
+            "featurePrefix": "feature/",
+            "releasePrefix": "release/",
+            "hotfixPrefix": "hotfix/",
+            "bugfixPrefix": "bugfix/",
+            "enforceNamingConvention": true,
+            "maxBranchNameLength": 50
+        },
+        "commitMessage": {
+            "enforceConventionalCommits": true,
+            "types": [
+                "feat",
+                "fix",
+                "docs",
+                "style",
+                "refactor",
+                "perf",
+                "test",
+                "build",
+                "ci",
+                "chore",
+                "revert"
+            ],
+            "maxSubjectLength": 72,
+            "maxBodyLineLength": 100
+        }
     },
 
     "terminal": {
@@ -152,7 +244,62 @@
             },
             "scrollback": 5000,
             "confirmOnExit": true,
-            "copyOnSelection": true
+            "copyOnSelection": true,
+            "enablePersistence": true,
+            "fontSize": 12,
+            "fontFamily": "Cascadia Code, Consolas, monospace"
+        }
+    },
+
+    "cleanArchitecture": {
+        "enforceLayering": true,
+        "layers": {
+            "domain": {
+                "allowed": [],
+                "pattern": "**/Domain/**",
+                "enforceAggregateRules": true,
+                "enforceValueObjectRules": true
+            },
+            "application": {
+                "allowed": ["domain"],
+                "pattern": "**/Application/**",
+                "enforceCQRSPattern": true,
+                "enforceValidation": true
+            },
+            "infrastructure": {
+                "allowed": ["domain", "application"],
+                "pattern": "**/Infrastructure/**",
+                "enforceRepositoryPattern": true,
+                "enforceUnitOfWork": true
+            },
+            "presentation": {
+                "allowed": ["domain", "application"],
+                "pattern": "**/Presentation/**",
+                "enforceControllerNaming": true,
+                "enforceRESTfulPrinciples": true
+            }
+        },
+        "patterns": {
+            "entities": "**/Domain/Entities/**",
+            "valueObjects": "**/Domain/ValueObjects/**",
+            "aggregates": "**/Domain/Aggregates/**",
+            "repositories": "**/Domain/Repositories/**",
+            "services": "**/Domain/Services/**",
+            "events": "**/Domain/Events/**",
+            "exceptions": "**/Domain/Exceptions/**",
+            "specifications": "**/Domain/Specifications/**",
+            "factories": "**/Domain/Factories/**"
+        },
+        "validation": {
+            "enforceFluentValidation": true,
+            "enforceDataAnnotations": true,
+            "enforceCustomValidators": true
+        },
+        "security": {
+            "enforceAuthorizationHandlers": true,
+            "enforceSecurityHeaders": true,
+            "enforceCSRFProtection": true,
+            "enforceXSSProtection": true
         }
     }
 } 
