@@ -299,7 +299,196 @@
             "enforceAuthorizationHandlers": true,
             "enforceSecurityHeaders": true,
             "enforceCSRFProtection": true,
-            "enforceXSSProtection": true
+            "enforceXSSProtection": true,
+            "enforceSensitiveDataHandling": true,
+            "enforceSecureDataTransfer": true,
+            "enforceSecureConfiguration": true,
+            "securityHeaders": {
+                "HSTS": true,
+                "XFrameOptions": true,
+                "ContentSecurityPolicy": true,
+                "XContentTypeOptions": true,
+                "ReferrerPolicy": true
+            },
+            "dataProtection": {
+                "enforceEncryption": true,
+                "enforceKeyRotation": true,
+                "enforceSecureStorage": true
+            },
+            "authentication": {
+                "requireMFA": true,
+                "enforcePasswordPolicy": true,
+                "enforceSessionManagement": true
+            }
+        },
+        "performance": {
+            "enforceResponseTime": true,
+            "maxResponseTime": 500,
+            "enforceResourceLimits": true,
+            "monitoring": {
+                "enableMetrics": true,
+                "enableTracing": true,
+                "enableHealthChecks": true,
+                "enablePerformanceCounters": true,
+                "sla": {
+                    "availability": 99.9,
+                    "responseTime": {
+                        "p95": 500,
+                        "p99": 1000
+                    },
+                    "errorRate": {
+                        "max": 0.1
+                    }
+                },
+                "metrics": {
+                    "collection": {
+                        "interval": 15,
+                        "retention": {
+                            "raw": 7,
+                            "aggregated": 90
+                        }
+                    },
+                    "thresholds": {
+                        "cpu": 80,
+                        "memory": 85,
+                        "disk": 90,
+                        "connections": 1000
+                    }
+                },
+                "observability": {
+                    "tracing": {
+                        "sampleRate": 0.1,
+                        "exportBatchSize": 512,
+                        "exportInterval": 5
+                    },
+                    "metrics": {
+                        "customMetrics": [
+                            "migration_duration",
+                            "records_processed",
+                            "error_count",
+                            "throughput"
+                        ],
+                        "dimensions": [
+                            "project_id",
+                            "source_type",
+                            "target_type"
+                        ]
+                    },
+                    "alerting": {
+                        "rules": [
+                            {
+                                "name": "HighErrorRate",
+                                "threshold": 5,
+                                "window": "5m",
+                                "severity": "critical"
+                            },
+                            {
+                                "name": "SlowMigration",
+                                "threshold": 1000,
+                                "window": "15m",
+                                "severity": "warning"
+                            }
+                        ]
+                    }
+                }
+            },
+            "caching": {
+                "enforceResponseCaching": true,
+                "enforceDistributedCaching": true,
+                "enforceOutputCaching": true
+            },
+            "optimization": {
+                "enforceAsyncIO": true,
+                "enforcePagination": true,
+                "enforceCompression": true,
+                "enforceConnectionPooling": true
+            }
+        },
+        "api": {
+            "versioning": {
+                "enforceVersioning": true,
+                "strategy": "url",
+                "format": "v{version}",
+                "supported": ["v1"],
+                "deprecated": [],
+                "sunset": {
+                    "warningPeriod": 90,
+                    "enforceHeaders": true
+                }
+            },
+            "documentation": {
+                "enforceOpenApi": true,
+                "enforceXmlComments": true,
+                "enforceExamples": true,
+                "enforceResponseTypes": true
+            },
+            "errorHandling": {
+                "standardizedResponses": true,
+                "detailedDevelopmentErrors": true,
+                "sanitizedProductionErrors": true,
+                "errorCodes": {
+                    "validation": "4xx",
+                    "business": "4xx",
+                    "security": "4xx",
+                    "system": "5xx"
+                }
+            }
+        },
+        "dataManagement": {
+            "retention": {
+                "enforceRetentionPolicy": true,
+                "policies": {
+                    "auditLogs": 365,
+                    "systemLogs": 90,
+                    "userActivity": 180,
+                    "backups": {
+                        "daily": 30,
+                        "weekly": 90,
+                        "monthly": 365
+                    }
+                }
+            },
+            "backup": {
+                "enforceBackupStrategy": true,
+                "schedule": {
+                    "full": "0 0 * * 0",
+                    "differential": "0 0 * * 1-6",
+                    "transactionLog": "0 */4 * * *"
+                },
+                "retention": {
+                    "full": 90,
+                    "differential": 30,
+                    "transactionLog": 7
+                }
+            },
+            "disasterRecovery": {
+                "enforceRecoveryPlan": true,
+                "rpo": 4,
+                "rto": 2,
+                "testingSchedule": "0 0 1 */3 *",
+                "documentation": {
+                    "enforceRunbooks": true,
+                    "enforceContactList": true,
+                    "enforceEscalationProcedures": true
+                }
+            },
+            "database": {
+                "enforceIndexStrategy": true,
+                "indexing": {
+                    "enforceClusteredIndexes": true,
+                    "enforceNonClusteredIndexes": true,
+                    "enforceColumnstoreIndexes": true,
+                    "maxIndexesPerTable": 10,
+                    "rebuildThreshold": 30,
+                    "reorganizeThreshold": 10
+                },
+                "performance": {
+                    "enforceQueryOptimization": true,
+                    "maxQueryDuration": 30,
+                    "enforceParameterization": true,
+                    "enforceStatistics": true
+                }
+            }
         }
     }
 } 
