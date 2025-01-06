@@ -53,6 +53,14 @@
     <!-- Analysis packages -->
     <StyleCopAnalyzersVersion>1.2.0-beta.507</StyleCopAnalyzersVersion>
     <SonarAnalyzerVersion>9.15.0.81779</SonarAnalyzerVersion>
+    
+    <!-- Infrastructure packages -->
+    <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
+    <DapperVersion>2.1.24</DapperVersion>
+    <SqlClientVersion>5.1.2</SqlClientVersion>
+    <BCryptVersion>4.0.3</BCryptVersion>
+    <GoogleAuthVersion>1.64.0</GoogleAuthVersion>
+    <JwtTokensVersion>7.0.3</JwtTokensVersion>
   </PropertyGroup>
 
   <!-- Common packages for all projects -->
@@ -118,6 +126,24 @@
 
   <!-- Infrastructure layer packages -->
   <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Infrastructure'))">
+    <!-- Database -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EntityFrameworkVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(EntityFrameworkVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    
+    <!-- Authentication -->
+    <PackageReference Include="BCrypt.Net-Next" Version="$(BCryptVersion)" />
+    <PackageReference Include="Google.Apis.Auth" Version="$(GoogleAuthVersion)" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="$(JwtTokensVersion)" />
+    
+    <!-- Persistence -->
+    <PackageReference Include="Dapper" Version="$(DapperVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SqlClientVersion)" />
+    
+    <!-- Configuration -->
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="$(MicrosoftExtensionsVersion)" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftExtensionsVersion)" />
   </ItemGroup>
