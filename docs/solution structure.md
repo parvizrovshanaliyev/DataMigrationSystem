@@ -1,8 +1,34 @@
+# Data Migration System - Solution Structure
+
+## Overview
+
+The Data Migration System is built following Clean Architecture principles, emphasizing:
+
+### Key Principles
+- Separation of concerns
+- Domain-driven design
+- CQRS pattern
+- Vertical slice architecture
+- Test-driven development
+
+### Core Features
+- Modular design with clear boundaries
+- Feature-based organization
+- Comprehensive testing strategy
+- Cross-cutting concerns separation
+- Versioned API design
+
+### Technology Stack
+- .NET 7.0 Core
+- Entity Framework Core
+- MediatR for CQRS
+- FluentValidation
+- Serilog & OpenTelemetry
+- Redis Caching
+
 # Solution Structure
 
 ## Architecture Overview
-
-### Solution Layout
 ```mermaid
 graph TB
     subgraph Solution
@@ -182,6 +208,15 @@ graph TB
     class CB,RTY,RL res
 ```
 
+## Directory Structure
+
+### Organization Principles
+- Clean separation of concerns
+- Feature-based modularity
+- Clear dependency boundaries
+- Consistent naming conventions
+- Standardized project structure
+
 ## Simple Directory Structure
 ```
 src/
@@ -338,276 +373,77 @@ src/
     └── Architecture.Tests/              # Architecture validation tests
 ```
 
-## Detailed Directory Structure with Diagrams
+[Detailed directory structure can be found here](docs/detailed-directory-structure.md)
 
-### Core Projects Structure
-```mermaid
-graph TB
-    subgraph DataMigration.CrossCutting
-        direction TB
-        CC[CrossCutting]
-        
-        subgraph Auditing
-            AUD_I[Interfaces]
-            AUD_S[Services]
-            AUD_M[Models]
-            AUD_I --- AUD_S
-            AUD_S --- AUD_M
-        end
-        
-        subgraph Caching
-            CACHE_I[Interfaces]
-            CACHE_S[Services]
-            CACHE_C[Configuration]
-            CACHE_I --- CACHE_S
-            CACHE_S --- CACHE_C
-        end
-        
-        subgraph Security
-            SEC_E[Encryption]
-            SEC_H[Hashing]
-            SEC_X[AntiXss]
-            SEC_D[DataProtection]
-        end
-        
-        subgraph Monitoring
-            MON_H[Health]
-            MON_M[Metrics]
-            MON_T[Tracing]
-        end
-        
-        subgraph Resilience
-            RES_C[CircuitBreaker]
-            RES_R[Retry]
-            RES_L[RateLimiting]
-        end
-        
-        CC --> Auditing
-        CC --> Caching
-        CC --> Security
-        CC --> Monitoring
-        CC --> Resilience
-    end
+## Detailed Component Structure
 
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px
-    classDef module fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef component fill:#e8f5e9,stroke:#1b5e20,stroke-width:1px
-    
-    class CC module
-    class AUD_I,AUD_S,AUD_M,CACHE_I,CACHE_S,CACHE_C component
-    class SEC_E,SEC_H,SEC_X,SEC_D component
-    class MON_H,MON_M,MON_T component
-    class RES_C,RES_R,RES_L component
-```
+### Layer Organization
+- Each layer has specific responsibilities
+- Clear dependency rules
+- Standardized component structure
+- Consistent implementation patterns
 
-### Domain Layer Structure
-```mermaid
-graph TB
-    subgraph DataMigration.Domain
-        direction TB
-        DOM[Domain]
-        
-        subgraph Common
-            COM_E[Events]
-            COM_I[Interfaces]
-            COM_M[Models]
-            COM_S[Security]
-        end
-        
-        subgraph Shared
-            SHA_E[Entity.cs]
-            SHA_A[AggregateRoot.cs]
-            SHA_V[ValueObject.cs]
-            SHA_EN[Enumeration.cs]
-            SHA_G[Guard.cs]
-            SHA_R[Result.cs]
-        end
-        
-        DOM --> Common
-        DOM --> Shared
-    end
+## Implementation Details
 
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px
-    classDef module fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef component fill:#ffe0b2,stroke:#ef6c00,stroke-width:1px
-    
-    class DOM module
-    class COM_E,COM_I,COM_M,COM_S component
-    class SHA_E,SHA_A,SHA_V,SHA_EN,SHA_G,SHA_R component
-```
+### Core Layer Components
 
-### Application Layer Structure
-```mermaid
-graph TB
-    subgraph DataMigration.Application
-        direction TB
-        APP[Application]
-        
-        subgraph Common
-            subgraph Behaviors
-                BEH_L[LoggingBehavior]
-                BEH_V[ValidationBehavior]
-                BEH_A[AuthorizationBehavior]
-                BEH_T[TransactionBehavior]
-                BEH_M[MetricsBehavior]
-                BEH_C[CachingBehavior]
-                BEH_R[RetryBehavior]
-                BEH_AU[AuditingBehavior]
-                BEH_TR[TracingBehavior]
-            end
-            
-            COM_I[Interfaces]
-            COM_M[Models]
-        end
-        
-        DI[DependencyInjection]
-        
-        APP --> Common
-        APP --> DI
-    end
+1. **Domain Layer**
+   - Entities and Value Objects
+   - Domain Events
+   - Repository Interfaces
+   - Domain Services
 
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px
-    classDef module fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
-    classDef component fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px
-    
-    class APP module
-    class BEH_L,BEH_V,BEH_A,BEH_T,BEH_M,BEH_C,BEH_R,BEH_AU,BEH_TR component
-    class COM_I,COM_M,DI component
-```
+2. **Application Layer**
+   - Commands and Queries
+   - Validation
+   - Business Rules
+   - Application Services
 
-### Infrastructure Layer Structure
-```mermaid
-graph TB
-    subgraph DataMigration.Infrastructure
-        direction TB
-        INF[Infrastructure]
-        
-        subgraph Authentication
-            AUTH_S[Services]
-            AUTH_C[Configuration]
-        end
-        
-        subgraph Authorization
-            AZ_S[Services]
-            AZ_P[Policies]
-        end
-        
-        subgraph Persistence
-            PER_C[Context]
-            PER_R[Repositories]
-            PER_CF[Configurations]
-            PER_I[Interceptors]
-        end
-        
-        subgraph Messaging
-            MSG_S[Services]
-            MSG_H[Handlers]
-        end
-        
-        DI[DependencyInjection]
-        
-        INF --> Authentication
-        INF --> Authorization
-        INF --> Persistence
-        INF --> Messaging
-        INF --> DI
-    end
+3. **Infrastructure Layer**
+   - Data Access
+   - External Services
+   - Security Implementation
+   - Technical Services
 
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px
-    classDef module fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef component fill:#e1bee7,stroke:#6a1b9a,stroke-width:1px
-    
-    class INF module
-    class AUTH_S,AUTH_C,AZ_S,AZ_P component
-    class PER_C,PER_R,PER_CF,PER_I component
-    class MSG_S,MSG_H,DI component
-```
+4. **API Layer**
+   - Controllers
+   - Middleware
+   - API Documentation
+   - Request/Response Models
 
-### Feature Module Structure
-```mermaid
-graph TB
-    subgraph DataMigration.UserManagement
-        direction TB
-        UM[UserManagement]
-        
-        subgraph Domain
-            subgraph Aggregates
-                AGG_U[UserAggregate]
-                AGG_A[ApiKeyAggregate]
-            end
-            DOM_V[ValueObjects]
-            DOM_E[Exceptions]
-            DOM_S[Services]
-        end
-        
-        subgraph Application
-            APP_C[Commands]
-            APP_Q[Queries]
-            APP_V[Validators]
-        end
-        
-        subgraph Infrastructure
-            INF_P[Persistence]
-            INF_S[Services]
-        end
-        
-        subgraph Api
-            API_V1[V1]
-            API_V2[V2]
-        end
-        
-        UM --> Domain
-        UM --> Application
-        UM --> Infrastructure
-        UM --> Api
-    end
+### Testing Strategy
 
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px
-    classDef module fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef component fill:#b3e5fc,stroke:#0277bd,stroke-width:1px
-    
-    class UM module
-    class AGG_U,AGG_A,DOM_V,DOM_E,DOM_S component
-    class APP_C,APP_Q,APP_V component
-    class INF_P,INF_S component
-    class API_V1,API_V2 component
-```
+1. **Unit Tests**
+   - Domain Logic
+   - Application Services
+   - Infrastructure Components
 
-### Test Projects Structure
-```mermaid
-graph TB
-    subgraph Tests
-        direction TB
-        TEST[Tests]
-        
-        subgraph Core
-            CT_CC[CrossCutting.Tests]
-            CT_D[Domain.Tests]
-            CT_A[Application.Tests]
-            CT_I[Infrastructure.Tests]
-        end
-        
-        subgraph Features
-            FT_UM[UserManagement.Tests]
-        end
-        
-        subgraph Architecture
-            AT[Architecture.Tests]
-        end
-        
-        TEST --> Core
-        TEST --> Features
-        TEST --> Architecture
-    end
+2. **Integration Tests**
+   - API Endpoints
+   - Database Operations
+   - External Services
 
-    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px
-    classDef module fill:#fce4ec,stroke:#880e4f,stroke-width:2px
-    classDef component fill:#f8bbd0,stroke:#ad1457,stroke-width:1px
-    
-    class TEST module
-    class CT_CC,CT_D,CT_A,CT_I component
-    class FT_UM component
-    class AT component
-```
+### Best Practices
+1. **Domain Layer**
+   - Rich domain models
+   - Encapsulated business rules
+   - Immutable value objects
+   - Domain events for changes
 
-Each diagram represents a major component of the solution, with clear hierarchical relationships and color-coding to distinguish different types of components. The diagrams show both the structure and the relationships between different parts of the system.
+2. **Application Layer**
+   - CQRS implementation
+   - Validation pipeline
+   - Business workflows
+   - Cross-cutting concerns
+
+3. **Infrastructure Layer**
+   - Repository implementations
+   - External service integrations
+   - Technical concerns
+   - Performance optimizations
+
+4. **API Layer**
+   - RESTful endpoints
+   - Versioning strategy
+   - Documentation
+   - Security implementation
