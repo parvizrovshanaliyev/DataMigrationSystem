@@ -1,69 +1,84 @@
-//using System.Reflection;
-//using MediatR;
-//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Http;
-//using DataMigration.Application.Common.Interfaces;
-//using DataMigration.Application.Common.Security;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using DataMigration.Application.Common.Interfaces;
+using DataMigration.Application.Common.Security;
+using MediatR;
 
-//namespace DataMigration.Application.Common.Behaviors;
+namespace DataMigration.Application.Common.Behaviors;
 
-//public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-//    where TRequest : IRequest<TResponse>
-//{
-//    private readonly IHttpContextAccessor _httpContextAccessor;
-//    private readonly IAuthorizationService _authorizationService;
+/// <summary>
+/// Pipeline behavior for handling request authorization
+/// </summary>
+public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
+{
+    private readonly ICurrentUser _currentUser;
 
-//    public AuthorizationBehavior(
-//        IHttpContextAccessor httpContextAccessor,
-//        IAuthorizationService authorizationService)
-//    {
-//        _httpContextAccessor = httpContextAccessor;
-//        _authorizationService = authorizationService;
-//    }
+    public AuthorizationBehavior(ICurrentUser currentUser)
+    {
+        _currentUser = currentUser;
+    }
 
-//    public async Task<TResponse> Handle(
-//        TRequest request,
-//        RequestHandlerDelegate<TResponse> next,
-//        CancellationToken cancellationToken)
-//    {
-//        var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
+    {
+        var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
 
-//        if (!authorizeAttributes.Any())
-//        {
-//            return await next();
-//        }
+        if (authorizeAttributes.Any())
+        {
+            // Must be authenticated user
+            if (_currentUser.Id == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
 
-//        var user = _httpContextAccessor.HttpContext?.User;
-//        if (user == null || !user.Identity!.IsAuthenticated)
-//        {
-//            throw new UnauthorizedAccessException("User is not authenticated");
-//        }
+            // Role-based authorization
+            var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
 
-//        foreach (var attribute in authorizeAttributes)
-//        {
-//            var authorized = false;
+            if (authorizeAttributesWithRoles.Any())
+            {
+                var authorized = false;
 
-//            if (!string.IsNullOrEmpty(attribute.Roles))
-//            {
-//                var roles = attribute.Roles.Split(',');
-//                authorized = roles.Any(role => user.IsInRole(role.Trim()));
-//            }
-//            else if (!string.IsNullOrEmpty(attribute.Policy))
-//            {
-//                var result = await _authorizationService.AuthorizeAsync(user, attribute.Policy);
-//                authorized = result.Succeeded;
-//            }
-//            else
-//            {
-//                authorized = true; // No specific roles or policies required
-//            }
+                foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
+                {
+                    foreach (var role in roles)
+                    {
+                        var isInRole = await _currentUser.IsInRoleAsync(role.Trim());
+                        if (isInRole)
+                        {
+                            authorized = true;
+                            break;
+                        }
+                    }
+                }
 
-//            if (!authorized)
-//            {
-//                throw new ForbiddenAccessException("User does not have required permissions");
-//            }
-//        }
+                // Must be a member of at least one role in roles
+                if (!authorized)
+                {
+                    throw new ForbiddenAccessException();
+                }
+            }
 
-//        return await next();
-//    }
-//}
+            // Policy-based authorization
+            var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+            if (authorizeAttributesWithPolicies.Any())
+            {
+                foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
+                {
+                    var authorized = await _currentUser.AuthorizeAsync(policy);
+
+                    if (!authorized)
+                    {
+                        throw new ForbiddenAccessException();
+                    }
+                }
+            }
+        }
+
+        // User is authorized / authorization not required
+        return await next();
+    }
+}
