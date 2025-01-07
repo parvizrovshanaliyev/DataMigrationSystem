@@ -33,110 +33,110 @@ The Data Migration System is built following Clean Architecture principles, emph
 ### Solution Layout
 ```mermaid
 graph TB
-    subgraph Solution["Solution (DataMigration System)"]
-        style Solution fill:#f5f5f5,stroke:#333,stroke-width:2px
+    subgraph Solution["Data Migration System"]
+        style Solution fill:#f8f9fa,stroke:#343a40,stroke-width:3px
         
         subgraph Core["Core Projects"]
-            style Core fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+            style Core fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
             
             subgraph CrossCutting["CrossCutting Layer"]
-                style CrossCutting fill:#ffcdd2,stroke:#c62828,stroke-width:2px
-                Audit[Auditing]
-                Cache[Caching]
-                Log[Logging]
-                Sec[Security]
-                Mon[Monitoring]
-                Res[Resilience]
+                style CrossCutting fill:#ffebee,stroke:#c62828,stroke-width:2px
+                Audit["Auditing Service"]:::cross
+                Cache["Caching Service"]:::cross
+                Log["Logging Service"]:::cross
+                Sec["Security Service"]:::cross
+                Mon["Monitoring Service"]:::cross
+                Res["Resilience Service"]:::cross
             end
             
             subgraph Domain["Domain Layer"]
-                style Domain fill:#fff3e0,stroke:#f57f17,stroke-width:2px
-                Ent[Entities]
-                VO[Value Objects]
-                DE[Domain Events]
-                DI[Domain Interfaces]
+                style Domain fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+                Ent["Entities & Aggregates"]:::domain
+                VO["Value Objects"]:::domain
+                DE["Domain Events"]:::domain
+                DI["Domain Interfaces"]:::domain
             end
             
             subgraph Application["Application Layer"]
-                style Application fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-                CMD[Commands]
-                QRY[Queries]
-                BEH[Behaviors]
-                SVC[Services]
+                style Application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+                CMD["Commands"]:::app
+                QRY["Queries"]:::app
+                BEH["Behaviors"]:::app
+                SVC["Services"]:::app
             end
             
             subgraph Infrastructure["Infrastructure Layer"]
-                style Infrastructure fill:#e1bee7,stroke:#6a1b9a,stroke-width:2px
-                Repo[Repositories]
-                Auth[Authentication]
-                DB[Database]
-                Msg[Messaging]
+                style Infrastructure fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+                Repo["Repositories"]:::infra
+                Auth["Authentication"]:::infra
+                DB["Database"]:::infra
+                Msg["Messaging"]:::infra
             end
             
             subgraph API["API Layer"]
-                style API fill:#bbdefb,stroke:#1565c0,stroke-width:2px
-                Ctrl[Controllers]
-                Mid[Middleware]
-                Docs[Documentation]
+                style API fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+                Ctrl["Controllers"]:::api
+                Mid["Middleware"]:::api
+                Docs["Documentation"]:::api
             end
         end
         
         subgraph Features["Feature Modules"]
-            style Features fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+            style Features fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
             
             subgraph UserMgmt["User Management"]
-                style UserMgmt fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-                UM_D[Domain]
-                UM_A[Application]
-                UM_I[Infrastructure]
-                UM_API[API]
+                style UserMgmt fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+                UM_D["Domain"]:::feature
+                UM_A["Application"]:::feature
+                UM_I["Infrastructure"]:::feature
+                UM_API["API"]:::feature
             end
             
             subgraph ProjMgmt["Project Management"]
-                style ProjMgmt fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-                PM_D[Domain]
-                PM_A[Application]
-                PM_I[Infrastructure]
-                PM_API[API]
+                style ProjMgmt fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+                PM_D["Domain"]:::feature
+                PM_A["Application"]:::feature
+                PM_I["Infrastructure"]:::feature
+                PM_API["API"]:::feature
             end
             
             subgraph DBConn["Database Connection"]
-                style DBConn fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-                DB_D[Domain]
-                DB_A[Application]
-                DB_I[Infrastructure]
-                DB_API[API]
+                style DBConn fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+                DB_D["Domain"]:::feature
+                DB_A["Application"]:::feature
+                DB_I["Infrastructure"]:::feature
+                DB_API["API"]:::feature
             end
             
             subgraph Schema["Schema Management"]
-                style Schema fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-                SM_D[Domain]
-                SM_A[Application]
-                SM_I[Infrastructure]
-                SM_API[API]
+                style Schema fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+                SM_D["Domain"]:::feature
+                SM_A["Application"]:::feature
+                SM_I["Infrastructure"]:::feature
+                SM_API["API"]:::feature
             end
         end
         
         subgraph Tests["Test Projects"]
-            style Tests fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+            style Tests fill:#fce4ec,stroke:#c2185b,stroke-width:3px
             
             subgraph CoreTests["Core Tests"]
-                style CoreTests fill:#f8bbd0,stroke:#c2185b,stroke-width:2px
-                Dom_T[Domain Tests]
-                App_T[Application Tests]
-                Inf_T[Infrastructure Tests]
-                API_T[API Tests]
+                style CoreTests fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+                Dom_T["Domain Tests"]:::test
+                App_T["Application Tests"]:::test
+                Inf_T["Infrastructure Tests"]:::test
+                API_T["API Tests"]:::test
             end
             
             subgraph FeatTests["Feature Tests"]
-                style FeatTests fill:#f8bbd0,stroke:#c2185b,stroke-width:2px
-                UM_T[User Management Tests]
-                PM_T[Project Management Tests]
-                DB_T[Database Connection Tests]
-                SM_T[Schema Management Tests]
+                style FeatTests fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+                UM_T["User Management Tests"]:::test
+                PM_T["Project Management Tests"]:::test
+                DB_T["Database Connection Tests"]:::test
+                SM_T["Schema Management Tests"]:::test
             end
             
-            Arch_T[Architecture Tests]
+            Arch_T["Architecture Tests"]:::test
         end
     end
 
@@ -184,21 +184,17 @@ graph TB
     SM_API --> SM_A
     SM_API --> SM_I
 
-    classDef default color:#000000,font-weight:bold
-    classDef core fill:#e3f2fd,stroke:#1565c0,color:#000000,font-weight:bold
-    classDef feature fill:#e8f5e9,stroke:#2e7d32,color:#000000,font-weight:bold
-    classDef test fill:#fce4ec,stroke:#c2185b,color:#000000,font-weight:bold
-    classDef cross fill:#ffcdd2,stroke:#c62828,color:#000000,font-weight:bold
-    classDef domain fill:#fff3e0,stroke:#f57f17,color:#000000,font-weight:bold
-    classDef app fill:#c8e6c9,stroke:#2e7d32,color:#000000,font-weight:bold
-    classDef infra fill:#e1bee7,stroke:#6a1b9a,color:#000000,font-weight:bold
-    classDef api fill:#bbdefb,stroke:#1565c0,color:#000000,font-weight:bold
+    %% Styling
+    classDef default color:#000000,font-size:14px,font-weight:bold
+    classDef cross fill:#ffebee,stroke:#c62828,color:#000000
+    classDef domain fill:#fff8e1,stroke:#f57f17,color:#000000
+    classDef app fill:#e8f5e9,stroke:#2e7d32,color:#000000
+    classDef infra fill:#f3e5f5,stroke:#6a1b9a,color:#000000
+    classDef api fill:#e3f2fd,stroke:#1565c0,color:#000000
+    classDef feature fill:#e8f5e9,stroke:#2e7d32,color:#000000
+    classDef test fill:#fce4ec,stroke:#c2185b,color:#000000
 
-    class Audit,Cache,Log,Sec,Mon,Res cross
-    class Ent,VO,DE,DI domain
-    class CMD,QRY,BEH,SVC app
-    class Repo,Auth,DB,Msg infra
-    class Ctrl,Mid,Docs api
+    linkStyle default stroke:#666,stroke-width:2px
 ```
 
 ### Core Layer Dependencies
