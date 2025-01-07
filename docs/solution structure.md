@@ -749,3 +749,113 @@ src/
    - Versioning strategy
    - Documentation
    - Security implementation
+
+### User Management and Core Interaction Flow
+```mermaid
+graph TB
+    subgraph UserManagement["User Management Feature"]
+        style UserManagement fill:#f0f4f8,stroke:#2c5282,stroke-width:3px
+        
+        subgraph UM_API["API Layer"]
+            style UM_API fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+            UC["User Controller"]:::umapi
+            AC["Auth Controller"]:::umapi
+            MC["MFA Controller"]:::umapi
+        end
+
+        subgraph UM_APP["Application Layer"]
+            style UM_APP fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+            UC_CMD["User Commands"]:::umapp
+            UC_QRY["User Queries"]:::umapp
+            AUTH_CMD["Auth Commands"]:::umapp
+            AUTH_QRY["Auth Queries"]:::umapp
+        end
+
+        subgraph UM_DOM["Domain Layer"]
+            style UM_DOM fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+            UA["User Aggregate"]:::umdom
+            AA["ApiKey Aggregate"]:::umdom
+            UE["User Events"]:::umdom
+        end
+
+        subgraph UM_INF["Infrastructure Layer"]
+            style UM_INF fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+            UR["User Repository"]:::uminf
+            AR["Auth Repository"]:::uminf
+            US["User Services"]:::uminf
+        end
+    end
+
+    subgraph CoreSolution["Core Solution"]
+        style CoreSolution fill:#f8f9fa,stroke:#343a40,stroke-width:3px
+        
+        subgraph CC["Cross-Cutting"]
+            style CC fill:#ffebee,stroke:#c62828,stroke-width:2px
+            LOG["Logging"]:::core
+            CACHE["Caching"]:::core
+            SEC["Security"]:::core
+            AUDIT["Auditing"]:::core
+        end
+
+        subgraph CORE_DOM["Core Domain"]
+            style CORE_DOM fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+            BE["Base Entity"]:::core
+            BVO["Base Value Object"]:::core
+            DE["Domain Event"]:::core
+        end
+
+        subgraph CORE_APP["Core Application"]
+            style CORE_APP fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+            PB["Pipeline Behaviors"]:::core
+            VAL["Validation"]:::core
+            AUTH["Authorization"]:::core
+        end
+
+        subgraph CORE_INF["Core Infrastructure"]
+            style CORE_INF fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+            DB["Database Context"]:::core
+            BR["Base Repository"]:::core
+            TS["Token Service"]:::core
+        end
+    end
+
+    %% Feature to Core Dependencies
+    UA --> BE
+    AA --> BE
+    UE --> DE
+    UR --> BR
+    AR --> BR
+    US --> TS
+
+    %% Feature Layer Dependencies
+    UC --> UC_CMD
+    UC --> UC_QRY
+    AC --> AUTH_CMD
+    AC --> AUTH_QRY
+    UC_CMD --> UA
+    UC_QRY --> UA
+    AUTH_CMD --> UA
+    AUTH_QRY --> UA
+    UR --> UA
+    AR --> AA
+
+    %% Core Service Usage
+    UC_CMD --> PB
+    UC_QRY --> PB
+    AUTH_CMD --> PB
+    AUTH_QRY --> PB
+    PB --> LOG
+    PB --> CACHE
+    PB --> SEC
+    PB --> AUDIT
+    PB --> VAL
+    PB --> AUTH
+
+    %% Styling
+    classDef umapi fill:#e3f2fd,stroke:#1565c0,color:#000000,font-weight:bold
+    classDef umapp fill:#e8f5e9,stroke:#2e7d32,color:#000000,font-weight:bold
+    classDef umdom fill:#fff8e1,stroke:#f57f17,color:#000000,font-weight:bold
+    classDef uminf fill:#f3e5f5,stroke:#6a1b9a,color:#000000,font-weight:bold
+    classDef core fill:#ffebee,stroke:#c62828,color:#000000,font-weight:bold
+
+    linkStyle default stroke:#666,stroke-width:2px,color:#000000
