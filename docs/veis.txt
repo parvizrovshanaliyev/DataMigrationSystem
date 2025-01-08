@@ -1,0 +1,159 @@
+src/
+├── Gateway/
+│   ├── Controllers/
+│   │   ├── ProxyController.cs
+│   │   ├── HealthController.cs
+│   │   └── AuthController.cs
+│   ├── Middleware/
+│   │   ├── RateLimitingMiddleware.cs
+│   │   ├── LoggingMiddleware.cs
+│   │   ├── AuthenticationMiddleware.cs
+│   │   └── ExceptionHandlingMiddleware.cs  # Added
+│   ├── Configuration/
+│   │   ├── GatewayOptions.cs
+│   │   ├── RoutingConfig.json
+│   │   ├── SecurityOptions.cs
+│   │   └── MetricsOptions.cs  # Added
+│   └── Extensions/
+│       ├── MiddlewareExtensions.cs
+│       └── ConfigurationExtensions.cs
+│
+├── Apis/ # APIs accessed via Gateway
+│   ├── Veis.Api/ # API for Veis
+│   │   ├── Features/  # Organized by feature
+│   │   │   ├── UserManagement/
+│   │   │   │   ├── UsersController.cs
+│   │   │   │   └── RolesController.cs
+│   │   │   ├── Authentication/
+│   │   │   │   └── AuthController.cs
+│   │   │   └── System/
+│   │   │       └── HealthCheckController.cs
+│   │   └── Configuration/
+│   │
+│   ├── Reports.Api/ # API for Reports (read-heavy)
+│   │   ├── Features/
+│   │   │   ├── ReportManagement/
+│   │   │   │   ├── ReportsController.cs
+│   │   │   │   └── TemplatesController.cs
+│   │   │   └── Scheduling/
+│   │   │       └── ScheduleController.cs
+│   │   ├── Infrastructure/
+│   │   │   ├── ReadReplicas/
+│   │   │   │   ├── ReplicaConnectionFactory.cs
+│   │   │   │   └── ReadReplicaHealthCheck.cs
+│   │   │   └── Services/
+│   │   │       └── ReportReadService.cs
+│   │   └── Configuration/
+│   │       └── DatabaseOptions.cs
+│   │
+│   ├── Veis.BackgroundJobs/ # Background jobs service
+│   │   ├── Features/
+│   │   │   ├── JobManagement/
+│   │   │   │   ├── JobsController.cs
+│   │   │   │   └── ScheduleController.cs
+│   │   │   └── Monitoring/
+│   │   │       └── HealthCheckController.cs
+│   │   ├── Infrastructure/
+│   │   │   ├── Workers/
+│   │   │   │   ├── JobExecutor.cs
+│   │   │   │   └── Scheduler.cs
+│   │   │   └── Monitoring/
+│   │   │       └── JobHealthChecks.cs
+│   │   └── Configuration/
+│   │       ├── JobServiceOptions.cs
+│   │       └── QuartzConfig.cs
+│
+├── Integrations/ # APIs accessed independently (not via Gateway)
+│   ├── Inbound/ # Integration Inbound API
+│   │   ├── V1/
+│   │   │   ├── Controllers/
+│   │   │   │   └── InboundController.cs  # Processes incoming data from external systems
+│   │   ├── Configuration/
+│   │
+│   ├── Outbound/ # Integration Outbound API
+│   │   ├── V1/
+│   │   │   ├── Controllers/
+│   │   │   │   └── OutboundController.cs  # Sends data to external systems
+│   │   ├── Configuration/
+│   │
+│   ├── Shared/ # Shared utilities for integrations
+│       ├── Interfaces/
+│       ├── Services/
+│       └── Models/
+│
+├── CrossCutting/ # Cross-cutting concerns (shared utilities)
+│   ├── Auditing/
+│   ├── Caching/
+│   ├── Logging/
+│   ├── Security/
+│   ├── Monitoring/
+│   └── Resilience/
+│
+├── Core/ # Core (shared) layers
+│   ├── Veis.Domain/
+│   │   ├── Common/
+│   │   │   ├── Entity.cs
+│   │   │   ├── ValueObject.cs
+│   │   │   ├── Guard.cs
+│   │   │   └── Interfaces/
+│   │   └── Aggregates/
+│   │       ├── UserManagement/
+│   │       │   ├── Entities/
+│   │       │   ├── ValueObjects/
+│   │       │   ├── Events/
+│   │       │   └── Repositories/
+│   │       ├── Reports/
+│   │       └── Jobs/
+│   │
+│   ├── Veis.Application/
+│   │   ├── Common/
+│   │   │   ├── Behaviors/
+│   │   │   │   ├── TransactionBehavior.cs
+│   │   │   │   ├── LoggingBehavior.cs
+│   │   │   │   ├── ValidationBehavior.cs
+│   │   │   │   └── CachingBehavior.cs
+│   │   │   └── Interfaces/
+│   │   │       ├── ICurrentUser.cs
+│   │   │       └── IDateTime.cs
+│   │   ├── Features/
+│   │   │   ├── UserManagement/
+│   │   │   │   ├── Commands/
+│   │   │   │   │   ├── CreateUserCommand.cs
+│   │   │   │   │   ├── CreateUserCommandHandler.cs
+│   │   │   │   │   └── CreateUserCommandValidator.cs
+│   │   │   │   ├── Queries/
+│   │   │   │   │   ├── GetUserByIdQuery.cs
+│   │   │   │   │   ├── GetUserByIdQueryHandler.cs
+│   │   │   │   │   └── UserDto.cs
+│   │   │   │   └── GetUsersQuery.cs
+│   │   │   ├── Dtos/
+│   │   │   │   ├── UserDto.cs
+│   │   │   │   └── RoleDto.cs
+│   │   │   └── Mappers/
+│   │   │       └── UserMappingProfile.cs
+│   │   └── Reports/
+│   │       ├── Commands/
+│   │       ├── Queries/
+│   │       ├── Dtos/
+│   │       └── Mappers/
+│
+├── Infrastructure/ # Technical services and utilities
+│   ├── Messaging/
+│   ├── Security/
+│   ├── Monitoring/
+│   └── DependencyInjection/
+│
+├── Persistence/ # Database-related functionality
+│   ├── DbContexts/
+│   ├── Repositories/
+│   ├── Migrations/
+│   ├── HealthChecks/
+│   └── DependencyInjection/
+│
+└── Tests/
+    ├── Core.Tests/
+    ├── Gateway.Tests/
+    ├── Apis.Tests/
+    ├── Infrastructure.Tests/
+    ├── Persistence.Tests/
+    └── CrossCutting.Tests/

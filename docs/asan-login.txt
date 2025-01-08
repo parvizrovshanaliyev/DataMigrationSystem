@@ -1,0 +1,376 @@
+# Asan Login Integration Documentation
+
+## Table of Contents
+1. Overview
+2. Architecture
+3. Authentication Flow
+4. API Endpoints
+5. Implementation Details
+6. Configuration
+7. Security
+8. Error Handling
+9. Integration Guide
+10. Troubleshooting
+
+## 1. Overview
+
+The Asan Login integration provides a secure authentication mechanism using Azerbaijan's Asan Login service. This implementation follows the OAuth 2.0 authorization code flow, enabling secure user authentication and information retrieval through the Asan Login system.
+
+### Key Features
+- OAuth 2.0 Authorization Code Flow
+- Secure token management
+- User information retrieval
+- Certificate management
+- Comprehensive error handling
+- Retry policies for resilience
+- Logging and monitoring
+
+## 2. Architecture
+
+### 2.1 Core Components
+
+#### AsanLoginController
+- Handles HTTP endpoints for Asan Login operations
+- Manages authentication flow
+- Processes callbacks
+- Retrieves user information
+
+#### AsanLoginService
+- Implements business logic
+- Manages token exchange
+- Handles user validation
+- Processes authentication responses
+
+#### AsanLoginHttpClient
+- Manages HTTP communication with Asan Login API
+- Implements retry policies
+- Handles timeouts
+- Manages authentication headers
+
+#### AsanLoginEntity
+- Data model for Asan Login sessions
+- Stores state and token information
+- Manages session expiration
+- Tracks user authentication status
+
+### 2.2 Dependencies
+```csharp
+using System.Web;
+using System.Net.Http;
+using Microsoft.Extensions.Options;
+using ErrorOr;
+using Polly;
+using Refit;
+```
+
+## 3. Authentication Flow
+
+### 3.1 Step 1: Login Initiation
+1. Client requests login initiation
+2. System generates unique state
+3. Builds authorization URL
+4. Returns URL for redirection
+
+```csharp
+GET /api/AsanLogin/Redirect
+Response: {
+    "url": "https://portal.login.gov.az/grant-permission?...",
+    "state": "unique-state-guid"
+}
+```
+
+### 3.2 Step 2: Authorization
+1. User authenticates on Asan Login portal
+2. Asan Login validates credentials
+3. User grants permissions
+4. System redirects to callback URL
+
+### 3.3 Step 3: Callback Processing
+1. Receive authorization code
+2. Validate state parameter
+3. Exchange code for tokens
+4. Validate token response
+5. Store session information
+6. Set authentication cookies
+7. Redirect to application
+
+```csharp
+GET /api/AsanLogin/Callback?code={code}&state={state}
+Response: 302 Redirect
+```
+
+## 4. API Endpoints
+
+### 4.1 Client Information
+```csharp
+GET /api/AsanLogin/GetClientInfo
+Response: {
+    "clientId": "string",
+    "clientName": "string",
+    "isValid": boolean
+}
+```
+
+### 4.2 User Information
+```csharp
+GET /api/AsanLogin/GetUserInfo
+Headers: {
+    Authorization: "Bearer {access_token}"
+}
+Response: {
+    "userId": "string",
+    "username": "string",
+    "email": "string"
+}
+```
+
+### 4.3 Person Information
+```csharp
+GET /api/AsanLogin/GetPersonInfo
+Headers: {
+    Authorization: "Bearer {access_token}"
+}
+Response: {
+    "pin": "string",
+    "firstName": "string",
+    "lastName": "string"
+}
+```
+
+### 4.4 Certificates
+```csharp
+GET /api/AsanLogin/GetCertificates
+Headers: {
+    Authorization: "Bearer {access_token}"
+}
+Response: {
+    "certificates": [
+        {
+            "id": "string",
+            "type": "string",
+            "validFrom": "datetime",
+            "validTo": "datetime"
+        }
+    ]
+}
+```
+
+## 5. Implementation Details
+
+### 5.1 Service Registration
+```csharp
+public static IServiceCollection AddIntegrationAsanLoginService(
+    this IServiceCollection services, 
+    IConfiguration configuration)
+{
+    services.Configure<AsanLoginSettings>(
+        configuration.GetSection(nameof(AsanLoginSettings))
+    );
+    
+    // Configure HTTP client
+    services.AddHttpClient<IAsanLoginHttpClient, AsanLoginHttpClient>()
+        .AddPolicyHandler(GetRetryPolicy())
+        .AddPolicyHandler(GetTimeoutPolicy());
+        
+    return services;
+}
+```
+
+### 5.2 Retry Policy Configuration
+```csharp
+private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .WaitAndRetryAsync(4, retryAttempt => 
+            TimeSpan.FromSeconds(Math.Pow(2, retryAttempt) / 2)
+        );
+}
+```
+
+### 5.3 Timeout Policy
+```csharp
+private static IAsyncPolicy<HttpResponseMessage> GetTimeoutPolicy()
+{
+    return Policy.TimeoutAsync<HttpResponseMessage>(
+        TimeSpan.FromMilliseconds(5000)
+    );
+}
+```
+
+## 6. Configuration
+
+### 6.1 AsanLoginSettings
+```json
+{
+  "AsanLoginSettings": {
+    "AuthorizationServerUrl": "https://portal.login.gov.az/grant-permission",
+    "BaseUrl": "https://apiportal.login.gov.az",
+    "AccessTokenRoute": "/ssoauth/oauth2/token",
+    "ClientId": "your-client-id",
+    "ClientSecret": "your-client-secret",
+    "RedirectUri": "http://your-domain/api/AuthForAsanLogin/Callback",
+    "RedirectAsanLoginPage": "http://your-domain/login?asanLoginCallbackResult=success",
+    "RedirectErrorPage": "http://your-domain/login?asanLoginCallbackResult=error",
+    "GetClientInfoUrl": "https://apiportal.login.gov.az/api/v1/clients/{ClientId}",
+    "ExpireIn": 10
+  }
+}
+```
+
+### 6.2 Environment-Specific Settings
+```csharp
+private readonly string? _redirectUrlForAsanLoginPage;
+private readonly string? _redirectUrlForErrorPage;
+
+public AsanLoginService(IOptions<AsanLoginSettings> settings)
+{
+    _redirectUrlForAsanLoginPage = DebugModeEnabled()
+        ? settings.Value.RedirectAsanLoginPageForDebug
+        : settings.Value.RedirectAsanLoginPage;
+}
+```
+
+## 7. Security
+
+### 7.1 Token Management
+- Secure token storage
+- Token encryption
+- Expiration handling
+- Refresh token rotation
+
+### 7.2 State Validation
+- Unique state generation
+- State validation
+- Expiration checking
+- Secure storage
+
+### 7.3 Cookie Security
+- Secure cookie flags
+- HTTP-only cookies
+- Same-site restrictions
+- Proper expiration
+
+## 8. Error Handling
+
+### 8.1 Error Types
+1. Authentication Errors
+   - Invalid credentials
+   - Expired tokens
+   - Invalid state
+2. API Errors
+   - Connection timeout
+   - Server errors
+   - Rate limiting
+3. Validation Errors
+   - Invalid input
+   - Missing parameters
+   - Format errors
+
+### 8.2 Error Responses
+```csharp
+public class ApiException : Exception
+{
+    public HttpResponseStatusTypes StatusType { get; }
+    public string[] Errors { get; }
+}
+```
+
+## 9. Integration Guide
+
+### 9.1 Prerequisites
+1. Valid Asan Login credentials
+2. Configured redirect URLs
+3. SSL certificates
+4. Required permissions
+
+### 9.2 Implementation Steps
+1. Install required packages
+2. Configure settings
+3. Register services
+4. Implement interfaces
+5. Set up error handling
+6. Configure logging
+7. Test integration
+
+### 9.3 Code Examples
+```csharp
+// Service registration
+services.AddIntegrationAsanLoginService(configuration);
+
+// Controller usage
+[HttpGet("Redirect")]
+public async Task<IActionResult> Redirect()
+{
+    var url = await _asanLoginService.GetAsanLoginUrlAsync();
+    return Ok(url);
+}
+```
+
+## 10. Troubleshooting
+
+### 10.1 Common Issues
+1. Configuration Issues
+   - Invalid client credentials
+   - Incorrect URLs
+   - Missing permissions
+2. Authentication Issues
+   - State mismatch
+   - Token expiration
+   - Invalid grants
+3. API Issues
+   - Rate limiting
+   - Timeout errors
+   - Connection issues
+
+### 10.2 Logging
+```csharp
+private readonly ILogger<AsanLoginService> _logger;
+
+private void LogError(string message, Exception ex)
+{
+    _logger.LogError(ex, message);
+}
+```
+
+### 10.3 Monitoring
+- Request/response logging
+- Error tracking
+- Performance metrics
+- Token usage statistics
+
+## 11. Best Practices
+
+### 11.1 Security
+- Use HTTPS only
+- Implement rate limiting
+- Validate all inputs
+- Secure token storage
+- Regular security audits
+
+### 11.2 Performance
+- Implement caching
+- Use connection pooling
+- Optimize database queries
+- Monitor response times
+
+### 11.3 Maintenance
+- Regular updates
+- Security patches
+- Performance monitoring
+- Log analysis
+- Documentation updates
+
+## 12. Support and Resources
+
+### 12.1 Documentation
+- API Documentation
+- Integration Guide
+- Security Guidelines
+- Troubleshooting Guide
+
+### 12.2 Contact Information
+- Technical Support
+- Security Team
+- Development Team
+- Documentation Team
